@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+struct Participant {
+    string id;
+    int score;
+};
+
+int main() {
+    int N;
+    cin >> N;
+    
+    // ตรวจสอบว่า N อยู่ในช่วงที่กำหนด
+    if (N < 1 || N > 10000) {
+        cout << "จำนวนผู้เข้าสอบต้องอยู่ในช่วง 1 ถึง 10,000" << endl;
+        return 1;
+    }
+    
+    vector<Participant> participants(N);
+    int totalScore = 0;
+
+    // อ่านข้อมูลผู้เข้าสอบ
+    for (int i = 0; i < N; i++) {
+        cin >> participants[i].id >> participants[i].score;
+
+        // ตรวจสอบความยาวของรหัสประจำตัว
+        if (participants[i].id.length() != 5) {
+            cout << "รหัสประจำตัวต้องมีความยาว 5 ตัวอักษร" << endl;
+            return 1;
+        }
+
+        // ตรวจสอบว่าคะแนนอยู่ในช่วงที่กำหนด (0 ถึง 10)
+        if (participants[i].score < 0 || participants[i].score > 100) {
+            cout << "คะแนนต้องอยู่ในช่วง 0 ถึง 10" << endl;
+            return 1;
+        }
+
+        // เพิ่มคะแนนรวมเพื่อใช้คำนวณค่าเฉลี่ย
+        totalScore += participants[i].score;
+    }
+
+    // คำนวณค่าเฉลี่ย
+    double average = static_cast<double>(totalScore) / N;
+    
+    // นับและแสดงผลผู้ที่คะแนนไม่ต่ำกว่าค่าเฉลี่ย
+    vector<string> passedIds;
+    for (const auto& participant : participants) {
+        if (participant.score >= average) {
+            passedIds.push_back(participant.id);
+        }
+    }
+    
+    // พิมพ์ผลลัพธ์
+    cout << passedIds.size() << endl;
+    for (const auto& id : passedIds) {
+        cout << id << endl;
+    }
+    
+    return 0;
+}
